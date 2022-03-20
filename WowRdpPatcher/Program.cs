@@ -9,7 +9,7 @@ namespace WowRdpPatcher
     public class Program
     {
         private static readonly byte[] peHeader = Encoding.ASCII.GetBytes("PE\0\0");
-        private static readonly byte[] rdataHeader = Encoding.ASCII.GetBytes(".rdata\0\0"); 
+        private static readonly byte[] rdataHeader = Encoding.ASCII.GetBytes(".rdata\0\0");
         private static readonly byte[] rdpStringBytes = Encoding.ASCII.GetBytes("Running World of Warcraft through a Remote Desktop");
 
         public static void Main(string[] args)
@@ -21,7 +21,7 @@ namespace WowRdpPatcher
             ColorPrint(@" |__/|__/\___/__,__/ /_/|_/____/_/    /_/   \_,_/\__/\__/_//_/\__/_/   ", ConsoleColor.White);
             ColorPrint($"                                      Version: ", $"{Assembly.GetEntryAssembly().GetName().Version}\n", ConsoleColor.Yellow);
 
-            string x =  Encoding.ASCII.GetString(peHeader);
+            string x = Encoding.ASCII.GetString(peHeader);
 
             if (args.Length < 1)
             {
@@ -112,7 +112,8 @@ namespace WowRdpPatcher
 
                                                 StringBuilder sbRdpFunc = new();
 
-                                                // fill the next 15 bytes with NOP's to prevent wow from exiting
+                                                // fill the next 15 bytes with NOP's to prevent wow
+                                                // from exiting
                                                 for (int i = 0; i < 15; ++i)
                                                 {
                                                     sbRdpFunc.Append($"0x{exeBytes[offset + i]:X} ");
@@ -176,6 +177,20 @@ namespace WowRdpPatcher
             return true;
         }
 
+        private static void ColorPrint(string text, string coloredText, ConsoleColor color = ConsoleColor.White)
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(text);
+            ColorPrint(coloredText, color);
+        }
+
+        private static void ColorPrint(string text, ConsoleColor color = ConsoleColor.White)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         private static bool FindByteSequence(byte[] bytes, byte[] sequence, out int offset)
         {
             for (int i = 0; i < bytes.Length; ++i)
@@ -189,21 +204,6 @@ namespace WowRdpPatcher
 
             offset = 0;
             return false;
-        }
-
-        private static void ColorPrint(string text, string coloredText, ConsoleColor color = ConsoleColor.White)
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text);
-            ColorPrint(coloredText, color);
-        }
-
-        private static void ColorPrint(string text, ConsoleColor color = ConsoleColor.White)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine(text);
-            Console.ForegroundColor = ConsoleColor.White;
-
         }
     }
 }
