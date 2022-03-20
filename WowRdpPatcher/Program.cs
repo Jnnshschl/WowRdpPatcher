@@ -21,8 +21,6 @@ namespace WowRdpPatcher
             ColorPrint(@" |__/|__/\___/__,__/ /_/|_/____/_/    /_/   \_,_/\__/\__/_//_/\__/_/   ", ConsoleColor.White);
             ColorPrint($"                                      Version: ", $"{Assembly.GetEntryAssembly().GetName().Version}\n", ConsoleColor.Yellow);
 
-            string x = Encoding.ASCII.GetString(peHeader);
-
             if (args.Length < 1)
             {
                 ColorPrint(">> Drop an *.exe on me...");
