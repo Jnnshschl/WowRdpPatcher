@@ -8,9 +8,9 @@ namespace WowRdpPatcher
 {
     public class Program
     {
-        private static readonly byte[] peHeader = { 80, 69, 0, 0 };
-        private static readonly byte[] rdataHeader = { 46, 114, 100, 97, 116, 97, 0, 0 };
-        private static readonly byte[] rdpStringBytes = { 82, 117, 110, 110, 105, 110, 103, 32, 87, 111, 114, 108, 100, 32, 111, 102, 32, 87, 97, 114, 99, 114, 97, 102, 116, 32, 116, 104, 114, 111, 117, 103, 104, 32, 97, 32, 82, 101, 109, 111, 116, 101, 32, 68, 101, 115, 107, 116, 111, 112 };
+        private static readonly byte[] peHeader = Encoding.ASCII.GetBytes("PE\0\0");
+        private static readonly byte[] rdataHeader = Encoding.ASCII.GetBytes(".rdata\0\0"); 
+        private static readonly byte[] rdpStringBytes = Encoding.ASCII.GetBytes("Running World of Warcraft through a Remote Desktop");
 
         public static void Main(string[] args)
         {
@@ -20,6 +20,8 @@ namespace WowRdpPatcher
             ColorPrint(@" | |/ |/ / _ \ |/|/ / / , _/ // / ___/ / ___/ _ `/ __/ __/ _ \/ -_) __/", ConsoleColor.White);
             ColorPrint(@" |__/|__/\___/__,__/ /_/|_/____/_/    /_/   \_,_/\__/\__/_//_/\__/_/   ", ConsoleColor.White);
             ColorPrint($"                                      Version: ", $"{Assembly.GetEntryAssembly().GetName().Version}\n", ConsoleColor.Yellow);
+
+            string x =  Encoding.ASCII.GetString(peHeader);
 
             if (args.Length < 1)
             {
@@ -84,7 +86,7 @@ namespace WowRdpPatcher
                                         // copy the string offset behind the push instruction
                                         Array.Copy(stringOffsetBytes, 0, bytesRdpCheck, 1, 4);
 
-                                        StringBuilder sbRdpCheck = new StringBuilder();
+                                        StringBuilder sbRdpCheck = new();
 
                                         for (int i = 0; i < 5; ++i)
                                         {
@@ -108,7 +110,7 @@ namespace WowRdpPatcher
                                                 File.WriteAllBytes(backupFilename, exeBytes);
                                                 ColorPrint($">> Backup exe:\t\t\t", Path.GetFileName(backupFilename), ConsoleColor.Green);
 
-                                                StringBuilder sbRdpFunc = new StringBuilder();
+                                                StringBuilder sbRdpFunc = new();
 
                                                 // fill the next 15 bytes with NOP's to prevent wow from exiting
                                                 for (int i = 0; i < 15; ++i)
